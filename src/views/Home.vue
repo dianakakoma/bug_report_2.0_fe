@@ -1,16 +1,36 @@
 <template>
   <div class="home">
+        <p>
+      <img src="@/assets/happy-ladybug.png" width="100" />
+    </p>
     <h1>{{ message }}</h1>
-    <div v-for="report in reports">
+    <h2>A bug reporting tool built for the end user!</h2>
+    <!-- create action -->
+    <h1>New Report</h1>
+    <div align="left">
+      Name: <input type="text" v-model="newName" /> <br>
+      Description: <input type="text" v-model="newDescription" /><br>
+      URL: <input type="text" v-model="newURL" /><br>
+      Suggested Fix: <input type="text" v-model="newSuggestedFix"/><br>
+      Screenshot: <input type="text" v-model="newScreenshot"/> <br>
+      <button v-on:click="createReport()">Create New Report</button>
+    </div>
+    <!--Index Action -->
+    <div v-for="report in reports" align="left">
       <p>Report Id: {{report.id}}</p>
        <p>Reported by: {{report.name}}</p>
-       <p>Description: {{report.description}}</p>
-       <br>
-      URL: <a v-bind:href="report.url">{{report.url}}</a>
-      <br>
+       <p>Description:  {{report.description}}</p>
+    <!-- Show Action -->
+    
+      <p>URL:   <a v-bind:href="report.url">{{report.url}}</a></p>
       <img v-bind:src="report.screenshot" v-bind:alt="Screenshot" width="200px"/>
-      <p>Suggested fix: {{report.suggested_fix}}</p>
-      <h2 style="color:red">****</h2>
+      <br>
+      <button v-on:click="showReport(report)">Show more</button>
+      <div v-if="currentReport === report">
+        <p>Suggested fix:   {{report.suggested_fix}}</p>
+        <p>Status:  {{report.status}}</p>
+      </div>
+       <h2 style="color:red">****</h2>
     </div>
   </div>
 </template>
@@ -25,6 +45,12 @@ export default {
     return {
       message: "Welcome to Bug Report 2.0!",
       reports: [],
+      currentReport: {},
+      newName: "",
+      newDescription: "",
+      newURL: "",
+      newSuggestedFix: "",
+      newScreenshot: "",
     };
   },
   created: function () {
@@ -32,6 +58,31 @@ export default {
       this.reports = response.data;
     });
   },
-  methods: {},
+  methods: {
+    createReport: function () {
+      var params = {
+        name: this.newName,
+        description: this.newDescription,
+        URL: this.newURL,
+        suggested_fix: this.newSuggestedFix,
+        screenshot: this.newScreenshot,
+      };
+      axios.post("/api/reports", params).then((response) => {
+        this.reports.shift(response.data);
+        this.newName = "";
+        this.newURL = "";
+        this.newDescription = "";
+        this.newSuggestedFix = "";
+        this.newScreenshot = "";
+      });
+    },
+    showReport: function (report) {
+      if (this.currentReport === report) {
+        this.currentReport = {};
+      } else {
+        this.currentReport = report;
+      }
+    },
+  },
 };
 </script>
