@@ -29,6 +29,13 @@
       <div v-if="currentReport === report">
         <p>Suggested fix:   {{report.suggested_fix}}</p>
         <p>Status:  {{report.status}}</p>
+
+    <!-- Update Action -->
+        <div>
+          Update the Suggested Fix:<input type="text" v-model="report.suggested_fix"/>
+          <button v-on:click="updateReport(report)">Update Report</button>
+        </div>
+        <button v-on:click="destroyReport(report)">Destroy This Report</button>
       </div>
        <h2 style="color:red">****</h2>
     </div>
@@ -82,6 +89,20 @@ export default {
       } else {
         this.currentReport = report;
       }
+    },
+    updateReport: function (report) {
+      var params = {
+        suggested_fix: report.suggested_fix,
+      };
+      axios.patch("/api/reports/" + report.id, params).then((response) => {
+        this.currentReport = {};
+      });
+    },
+    destroyReport: function (report) {
+      axios.delete("/api/reports/" + report.id).then((response) => {
+        var index = this.reports.indexOf(report);
+        this.reports.splice(index, 1);
+      });
     },
   },
 };
