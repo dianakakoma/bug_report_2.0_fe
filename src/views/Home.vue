@@ -6,16 +6,17 @@
     <h1>{{ message }}</h1>
     <h2>A bug reporting tool built for the end user!</h2>
     <!-- create action -->
-    <h1>New Report</h1>
+    <h1>File a New Report</h1>
     <div align="left">
       Name: <input type="text" v-model="newName" /> <br>
       Description: <input type="text" v-model="newDescription" /><br>
       URL: <input type="text" v-model="newURL" /><br>
       Suggested Fix: <input type="text" v-model="newSuggestedFix"/><br>
       Screenshot: <input type="text" v-model="newScreenshot"/> <br>
-      <button v-on:click="createReport()">Create New Report</button>
+      <button style="background-color:green;color:white" v-on:click="createReport()">Create New Report</button>
     </div>
     <!--Index Action -->
+    <h2>Existing Reports</h2>
     <div v-for="report in reports" align="left">
       <p>Report Id: {{report.id}}</p>
        <p>Reported by: {{report.name}}</p>
@@ -25,7 +26,7 @@
       <p>URL:   <a v-bind:href="report.url">{{report.url}}</a></p>
       <img v-bind:src="report.screenshot" v-bind:alt="Screenshot" width="200px"/>
       <br>
-      <button v-on:click="showReport(report)">Show more</button>
+      <button style="background-color:blue;color:white" v-on:click="showReport(report)">Show more</button>
       <div v-if="currentReport === report">
         <p>Suggested fix:   {{report.suggested_fix}}</p>
         <p>Status:  {{report.status}}</p>
@@ -33,9 +34,9 @@
     <!-- Update Action -->
         <div>
           Update the Suggested Fix:<input type="text" v-model="report.suggested_fix"/>
-          <button v-on:click="updateReport(report)">Update Report</button>
+          <button style="background-color:black;color:white" v-on:click="updateReport(report)">Update Report</button>
         </div>
-        <button v-on:click="destroyReport(report)">Destroy This Report</button>
+        <button style="background-color:pink;color:black"v-on:click="destroyReport(report)">Destroy This Report</button>
       </div>
        <h2 style="color:red">****</h2>
     </div>
